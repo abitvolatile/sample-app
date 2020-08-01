@@ -1,0 +1,127 @@
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: postgres
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-password
+  labels:
+    app: ecommerce
+    service: db
+type: Opaque
+data:
+  pw: password
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: task-pvc-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+#  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    tags.datadoghq.com/env: "dev"
+    tags.datadoghq.com/service: "store-frontend-sqlite"
+    tags.datadoghq.com/version: "1.0.2"
+    service: db
+    app: ecommerce
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: db
+      app: ecommerce
+  strategy: {}
+  template:
+    metadata:
+      # annotations:
+      #   vault.hashicorp.com/agent-inject: "true"
+      #   vault.hashicorp.com/log-level: "info"
+      #   vault.hashicorp.com/role: "sample-app_db"
+      #   vault.hashicorp.com/auth-path: "/auth/kubernetes"
+      #   vault.hashicorp.com/agent-revoke-on-shutdown: "true"
+      #   vault.hashicorp.com/agent-inject-secret-env.sh: "kv/data/db/creds"
+      #   vault.hashicorp.com/secret-volume-path-env.sh: "/etc/profile.d"
+      #   vault.hashicorp.com/agent-inject-command-env.sh: "chmod a+x /etc/profile.d/env.sh"
+      #   vault.hashicorp.com/agent-inject-template-env.sh: |
+      #     {{ with secret "kv/data/db/creds" -}}
+      #     export POSTGRES_PASSWORD="{{ .Data.data.password }}"
+      #     {{- end }}
+      labels:
+        tags.datadoghq.com/env: "dev"
+        tags.datadoghq.com/service: "store-frontend-sqlite"
+        tags.datadoghq.com/version: "1.0.2"
+        service: db
+        app: ecommerce
+    spec:
+      containers:
+      - image: postgres:11-alpine
+        name: postgres
+        securityContext:
+          privileged: true 
+        ports:
+          - containerPort: 5432
+        env:
+        - name: DD_ENV
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/env']
+        - name: DD_SERVICE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/service']
+        - name: DD_VERSION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/version']
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: pw
+              name: db-password
+        - name: POSTGRES_USER
+          value: "user"
+        # - name: POSTGRES_HOST_AUTH_METHOD
+        #   value: "trust"
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/mydata"
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgresdb 
+      serviceAccountName: postgres
+      volumes:
+      - name: postgresdb
+        persistentVolumeClaim:
+            claimName: task-pvc-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ecommerce
+    service: db 
+  name: db
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: ecommerce
+    service: db
+status:
+  loadBalancer: {}

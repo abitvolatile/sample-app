@@ -1,0 +1,99 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    tags.datadoghq.com/env: "dev"
+    tags.datadoghq.com/service: "store-frontend"
+    tags.datadoghq.com/version: "1.0.2"
+    service: frontend
+    app: ecommerce
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: frontend
+      app: ecommerce
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        tags.datadoghq.com/env: "dev"
+        tags.datadoghq.com/service: "store-frontend"
+        tags.datadoghq.com/version: "1.0.2"
+        service: frontend
+        app: ecommerce
+    spec:
+      containers:
+      - args:
+        - docker-entrypoint.sh
+        command:
+        - sh
+        env:
+        - name: DD_ENV
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/env']
+        - name: DD_SERVICE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/service']
+        - name: DD_VERSION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/version']
+        - name: DB_USERNAME
+          value: user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: pw
+              name: db-password
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DD_LOGS_INJECTION
+          value: "true"
+        - name: DD_ANALYTICS_ENABLED
+          value: "true"
+        # Enable RUM
+        - name: DD_CLIENT_TOKEN
+          value: "<CLIENT_TOKEN_HERE>"
+        - name: DD_APPLICATION_ID
+          value: "<APPLICATIION_ID_HERE>"
+        image: abitvolatile/store-frontend:1.0.1
+        imagePullPolicy: Always
+        name: ecommerce-spree-observability
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: demo-app
+  labels:
+    service: frontend
+    app: ecommerce
+  name: frontend
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    service: frontend
+    app: ecommerce
+  type: LoadBalancer
