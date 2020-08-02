@@ -1,39 +1,11 @@
 ---
-kind: ServiceAccount
-apiVersion: v1
-metadata:
-  name: postgres
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db-password
-  labels:
-    app: ecommerce
-    service: db
-type: Opaque
-data:
-  pw: password
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: task-pvc-volume
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-#  storageClassName: standard
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     tags.datadoghq.com/env: "dev"
     tags.datadoghq.com/service: "store-frontend-sqlite"
-    tags.datadoghq.com/version: "1.0.2"
+    tags.datadoghq.com/version: "1.0.1"
     service: db
     app: ecommerce
   name: db
@@ -62,7 +34,7 @@ spec:
       labels:
         tags.datadoghq.com/env: "dev"
         tags.datadoghq.com/service: "store-frontend-sqlite"
-        tags.datadoghq.com/version: "1.0.2"
+        tags.datadoghq.com/version: "1.0.1"
         service: db
         app: ecommerce
     spec:
@@ -106,22 +78,3 @@ spec:
       - name: postgresdb
         persistentVolumeClaim:
             claimName: task-pvc-volume
----
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  labels:
-    app: ecommerce
-    service: db 
-  name: db
-spec:
-  ports:
-  - port: 5432
-    protocol: TCP
-    targetPort: 5432
-  selector:
-    app: ecommerce
-    service: db
-status:
-  loadBalancer: {}

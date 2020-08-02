@@ -5,7 +5,7 @@ metadata:
   labels:
     tags.datadoghq.com/env: "dev"
     tags.datadoghq.com/service: "store-frontend"
-    tags.datadoghq.com/version: "1.0.2"
+    tags.datadoghq.com/version: "1.0.1"
     service: frontend
     app: ecommerce
   name: frontend
@@ -25,7 +25,7 @@ spec:
       labels:
         tags.datadoghq.com/env: "dev"
         tags.datadoghq.com/service: "store-frontend"
-        tags.datadoghq.com/version: "1.0.2"
+        tags.datadoghq.com/version: "1.0.1"
         service: frontend
         app: ecommerce
     spec:
@@ -78,22 +78,3 @@ spec:
             cpu: 100m
             memory: 100Mi
           limits: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: demo-app
-  labels:
-    service: frontend
-    app: ecommerce
-  name: frontend
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 3000
-  selector:
-    service: frontend
-    app: ecommerce
-  type: LoadBalancer

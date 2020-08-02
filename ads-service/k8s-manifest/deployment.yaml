@@ -5,7 +5,7 @@ metadata:
   labels:
     tags.datadoghq.com/env: "dev"
     tags.datadoghq.com/service: "advertisements-service"
-    tags.datadoghq.com/version: "1.0.2"
+    tags.datadoghq.com/version: "1.0.1"
     service: advertisements
     app: ecommerce
   name: advertisements 
@@ -22,7 +22,7 @@ spec:
       labels:
         tags.datadoghq.com/env: "dev"
         tags.datadoghq.com/service: "advertisements-service"
-        tags.datadoghq.com/version: "1.0.2"
+        tags.datadoghq.com/version: "1.0.1"
         service: advertisements
         app: ecommerce
     spec:
@@ -68,20 +68,3 @@ spec:
         ports:
         - containerPort: 5002
         resources: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    service: advertisements
-    app: ecommerce
-  name: advertisements
-spec:
-  ports:
-  - port: 5002
-    protocol: TCP
-    targetPort: 5002
-  selector:
-    service: advertisements
-    app: ecommerce
-status:

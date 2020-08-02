@@ -5,7 +5,7 @@ metadata:
   labels:
     tags.datadoghq.com/env: "dev"
     tags.datadoghq.com/service: "discounts-service"
-    tags.datadoghq.com/version: "1.0.2"
+    tags.datadoghq.com/version: "1.0.1"
     app: ecommerce
     service: discounts
   name: discounts
@@ -22,7 +22,7 @@ spec:
       labels:
         tags.datadoghq.com/env: "dev"
         tags.datadoghq.com/service: "discounts-service"
-        tags.datadoghq.com/version: "1.0.2"
+        tags.datadoghq.com/version: "1.0.1"
         service: discounts
         app: ecommerce
     spec:
@@ -68,21 +68,3 @@ spec:
         ports:
         - containerPort: 5001
         resources: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    service: discounts
-    app: ecommerce
-  name: discounts
-spec:
-  ports:
-  - port: 5001
-    protocol: TCP
-    targetPort: 5001
-  selector:
-    service: discounts
-    app: ecommerce
-  sessionAffinity: None
-  type: ClusterIP
