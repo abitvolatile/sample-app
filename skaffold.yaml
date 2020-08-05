@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2beta6
+kind: Config
+build:
+  artifacts:
+    - image: advertisements-service
+      context: ads-service/src
+    - image: discounts-service
+      context: discounts-service/src
+    - image: store-frontend
+      context: store-frontend/src
+  tagPolicy:
+    envTemplate:
+      template: "{{.TAG}}"
+deploy:
+  kubectl:
+    manifests:
+      - ads-service/k8s-manifest/*.yaml
+      - database/k8s-manifest/*.yaml
+      - discounts-service/k8s-manifest/*.yaml
+      - store-frontend/k8s-manifest/*.yaml
