@@ -28,6 +28,7 @@ spec:
     spec:
       containers:
       - image: abitvolatile/advertisements-service:1.0.1
+        imagePullPolicy: IfNotPresent
         name: advertisements 
         command: ["ddtrace-run"]
         args: ["flask", "run", "--port=5002", "--host=0.0.0.0"]

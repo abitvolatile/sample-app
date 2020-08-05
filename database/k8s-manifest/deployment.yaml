@@ -24,11 +24,11 @@ spec:
       #   vault.hashicorp.com/role: "sample-app_db"
       #   vault.hashicorp.com/auth-path: "/auth/kubernetes"
       #   vault.hashicorp.com/agent-revoke-on-shutdown: "true"
-      #   vault.hashicorp.com/agent-inject-secret-env.sh: "kv/data/db/creds"
+      #   vault.hashicorp.com/agent-inject-secret-env.sh: "kv/data/sample-app/db/creds"
       #   vault.hashicorp.com/secret-volume-path-env.sh: "/etc/profile.d"
       #   vault.hashicorp.com/agent-inject-command-env.sh: "chmod a+x /etc/profile.d/env.sh"
       #   vault.hashicorp.com/agent-inject-template-env.sh: |
-      #     {{ with secret "kv/data/db/creds" -}}
+      #     {{ with secret "kv/data/sample-app/db/creds" -}}
       #     export POSTGRES_PASSWORD="{{ .Data.data.password }}"
       #     {{- end }}
       labels:
@@ -40,6 +40,7 @@ spec:
     spec:
       containers:
       - image: postgres:11-alpine
+        imagePullPolicy: IfNotPresent
         name: postgres
         securityContext:
           privileged: true 

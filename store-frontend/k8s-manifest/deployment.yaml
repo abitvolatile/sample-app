@@ -68,7 +68,7 @@ spec:
         - name: DD_APPLICATION_ID
           value: "<APPLICATIION_ID_HERE>"
         image: abitvolatile/store-frontend:1.0.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: ecommerce-spree-observability
         ports:
         - containerPort: 3000

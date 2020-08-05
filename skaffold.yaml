@@ -2,11 +2,11 @@ apiVersion: skaffold/v2beta6
 kind: Config
 build:
   artifacts:
-    - image: advertisements-service
+    - image: abitvolatile/advertisements-service
       context: ads-service/src
-    - image: discounts-service
+    - image: abitvolatile/discounts-service
       context: discounts-service/src
-    - image: store-frontend
+    - image: abitvolatile/store-frontend
       context: store-frontend/src
   tagPolicy:
     envTemplate:
