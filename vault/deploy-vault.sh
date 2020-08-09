@@ -8,7 +8,7 @@ NAMESPACE='vault'
 
 echo
 echo "Creating Namespace..."
-kubectl create ns vault
+kubectl create ns $NAMESPACE
 
 echo
 echo "Deploying Helm Chart..."
@@ -16,7 +16,8 @@ helm -n $NAMESPACE install vault hashicorp/vault --version $HELM_CHART_VERSION -
 
 echo
 echo "Creating Service Account and ClusterRoleBinding Resources..."
-kubectl -n $NAMESPACE apply -f ./k8s-manifest/
+kubectl -n $NAMESPACE create serviceaccount vault-auth --dry-run=true
+kubectl -n $NAMESPACE create clusterrolebinding role-tokenreview-binding --clusterrole=system:auth-delegator --serviceaccount=vault:vault-auth
 
 # Give it time to spin up pods
 sleep 10
@@ -29,7 +30,7 @@ VAULT_INIT=$(kubectl -n $NAMESPACE exec -i vault-0 -c vault -- sh <<EOM
   vault operator init -format=json
 EOM)
 
-# Prints the Vault Root Token and Unseal Keys to File
+echo
 echo "Vault Token and Unseal Keys..."
 echo "$VAULT_INIT" | jq '.'
 echo "$VAULT_INIT" | jq '.' > ./.vault_secrets

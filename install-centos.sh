@@ -35,17 +35,20 @@ curl -sLo ./kubectl https://storage.googleapis.com/kubernetes-release/release/v1
 chmod +x ./kubectl
 mv ./kubectl /usr/bin/kubectl
 
-
 # Download KIND
 curl -sLo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
 chmod +x ./kind
 mv ./kind /usr/bin/kind
 
-
 # Download Skaffold
 curl -sLo ./skaffold https://storage.googleapis.com/skaffold/releases/v1.13.1/skaffold-linux-amd64
 chmod +x ./skaffold
 mv ./skaffold /usr/bin/skaffold
+
+# Download Helm
+export HELM_INSTALL_DIR='/usr/bin' 
+curl -sLo https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+unset HELM_INSTALL_DIR
 
 
 
