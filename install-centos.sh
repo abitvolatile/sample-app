@@ -30,6 +30,9 @@ systemctl start docker.service && systemctl enable docker.service
 
 ### Download/Install Binary Dependencies
 
+yum install -y epel-release
+yum install -y jq
+
 # Download Kubectl
 curl -sLo ./kubectl https://storage.googleapis.com/kubernetes-release/release/v1.18.4/bin/linux/amd64/kubectl
 chmod +x ./kubectl
@@ -47,7 +50,8 @@ mv ./skaffold /usr/bin/skaffold
 
 # Download Helm
 export HELM_INSTALL_DIR='/usr/bin' 
-curl -sLo https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -s -- --version v3.2.4
+chown vagrant:vagrant /usr/bin/helm
 unset HELM_INSTALL_DIR
 
 

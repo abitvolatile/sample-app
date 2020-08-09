@@ -6,12 +6,19 @@ NAMESPACE='vault'
 
 # Download Helm
 export HELM_INSTALL_DIR='/usr/bin' 
-curl -sLo https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -s -- --version v3.2.4
+chown vagrant:vagrant /usr/bin/helm
 unset HELM_INSTALL_DIR
 
 
 
 ######### Deploy HashiCorp Vault #########
+
+
+# Add/Configure HashiCorp Helm Repository
+helm repo add hashicorp https://helm.releases.hashicorp.com
+helm repo update
+
 
 echo
 echo "Creating Namespace..."
@@ -23,11 +30,11 @@ helm -n $NAMESPACE install vault hashicorp/vault --version $HELM_CHART_VERSION -
 
 echo
 echo "Creating Service Account and ClusterRoleBinding Resources..."
-kubectl -n $NAMESPACE create serviceaccount vault-auth --dry-run=true
+kubectl -n $NAMESPACE create serviceaccount vault-auth
 kubectl -n $NAMESPACE create clusterrolebinding role-tokenreview-binding --clusterrole=system:auth-delegator --serviceaccount=vault:vault-auth
 
 # Give it time to spin up pods
-sleep 10
+sleep 20
 
 
 
@@ -35,7 +42,8 @@ echo
 echo "Initializing Vault Storage..."
 VAULT_INIT=$(kubectl -n $NAMESPACE exec -i vault-0 -c vault -- sh <<EOM
   vault operator init -format=json
-EOM)
+EOM
+)
 
 echo
 echo "Vault Token and Unseal Keys..."
