@@ -30,7 +30,7 @@ systemctl start docker.service && systemctl enable docker.service
 
 ### Download/Install Binary Dependencies
 
-# Install Kubectl
+# Download Kubectl
 curl -sLo ./kubectl https://storage.googleapis.com/kubernetes-release/release/v1.18.4/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/bin/kubectl
