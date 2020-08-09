@@ -4,6 +4,13 @@ HELM_CHART_VERSION='0.6.0'
 NAMESPACE='vault'
 
 
+# Download Helm
+export HELM_INSTALL_DIR='/usr/bin' 
+curl -sLo https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+unset HELM_INSTALL_DIR
+
+
+
 ######### Deploy HashiCorp Vault #########
 
 echo
