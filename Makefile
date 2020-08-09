@@ -7,16 +7,13 @@
 provision :
 	kind create cluster --config=kind-config.yaml
 
-
 .PHONY : dev $(TAG)
 dev : $(TAG)
 	./start-skaffold-dev.sh ${TAG}
 
-
 .PHONY : build
 build :
 	skaffold config set local-cluster false && skaffold build -t ${TAG} && skaffold config set local-cluster true
-
 
 .PHONY : all $(TAG)
 all : $(TAG)
@@ -26,20 +23,17 @@ all : $(TAG)
 
 ### Clean Operations
 
-.PHONY : kind-clean
-kind-clean :
+.PHONY : clean-kind
+clean-kind :
 	kind delete cluster
 
-
-.PHONY : docker-clean
-docker-clean :
+.PHONY : clean-docker
+clean-docker :
 	docker system prune -a -f --volumes
 
-
-.PHONY : skaffold-clean
-skaffold-clean :
+.PHONY : clean-skaffold
+clean-skaffold :
 	rm -rf ~/.skaffold/
-
 
 .PHONY : clean-all
 clean-all :

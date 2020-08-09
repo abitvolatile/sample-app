@@ -91,10 +91,12 @@ EOF
 
 ### Configure Firewalld Service (OPTIONAL - Used for CentOS Remote System)
 
-# Configure Firewall Service
-firewall-cmd --zone=public --add-port=33052/tcp --permanent
-
-# Validation/Debugging
-firewall-cmd --reload
-firewall-cmd --list-all
-
+if [[ $(firewall-cmd --state) = 'running' ]]
+then
+  # Configure Firewall Service
+  firewall-cmd --zone=public --add-port=33052/tcp --permanent
+  
+  # Validation/Debugging
+  firewall-cmd --reload
+  firewall-cmd --list-all
+fi
