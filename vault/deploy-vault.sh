@@ -4,11 +4,14 @@ HELM_CHART_VERSION='0.6.0'
 NAMESPACE='vault'
 
 
-# Download Helm
-export HELM_INSTALL_DIR='/usr/bin' 
-curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -s -- --version v3.2.4
-chown vagrant:vagrant /usr/bin/helm
-unset HELM_INSTALL_DIR
+# Download Helm (If its Not Already Installed)
+if ! command -v helm &> /dev/null
+then
+  echo "Helm could not be found..."
+  export HELM_INSTALL_DIR='/usr/bin' 
+  curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -s -- --version v3.2.4
+  unset HELM_INSTALL_DIR
+fi
 
 
 
@@ -34,7 +37,7 @@ kubectl -n $NAMESPACE create serviceaccount vault-auth
 kubectl -n $NAMESPACE create clusterrolebinding role-tokenreview-binding --clusterrole=system:auth-delegator --serviceaccount=vault:vault-auth
 
 # Give it time to spin up pods
-sleep 20
+sleep 15
 
 
 
@@ -54,32 +57,21 @@ echo "$VAULT_INIT" | jq '.' > ./.vault_secrets
 sleep 5
 
 
+# Load Vault Script Functions
+source vault-functions.sh vault # Specified the Namespace
+
+
 
 echo "Unsealing Vault's Primary Node..."
-kubectl -n $NAMESPACE exec -i vault-0 -c vault -- sh <<EOM
-  export VAULT_ADDR="http://127.0.0.1:8200"
-  export VAULT_TOKEN=$(echo $VAULT_INIT | jq -r '.root_token')
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[0]')
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[1]')
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[2]')
-EOM
+vault_unseal vault-0 # Specified the Pod Name
 
 # Pause
 sleep 10
 
 
-echo
 echo "Unsealing Vault's Secondary Node..."
-kubectl -n $NAMESPACE exec -i vault-1 -c vault -- sh <<EOM
-  export VAULT_ADDR="http://127.0.0.1:8200"
-  export VAULT_TOKEN=$(echo $VAULT_INIT | jq -r '.root_token')
-  vault operator raft join "http://vault-active.vault.svc.cluster.local:8200"
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[0]')
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[1]')
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[2]')
-  sleep 2
-  vault operator raft list-peers
-EOM
+vault_join vault-1 http://vault-active.vault.svc.cluster.local:8200  
+# Specified the Pod Name and Service Endpoint for Join
 
 # Pause
 sleep 3
@@ -87,19 +79,12 @@ sleep 3
 
 echo
 echo "Unsealing Vault's Tertiary Node..."
-kubectl -n $NAMESPACE exec -i vault-2 -c vault -- sh <<EOM
-  export VAULT_ADDR="http://127.0.0.1:8200"
-  export VAULT_TOKEN=$(echo $VAULT_INIT | jq -r '.root_token')
-  vault operator raft join "http://vault-active.vault.svc.cluster.local:8200"
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[0]')
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[1]')
-  vault operator unseal $(echo $VAULT_INIT | jq -r '.unseal_keys_b64[2]')
-  sleep 2
-  vault operator raft list-peers
-EOM
+vault_join vault-2 http://vault-active.vault.svc.cluster.local:8200
+# Specified the Pod Name and Service Endpoint for Join
 
 # Pause
 sleep 3
+
 
 
 echo

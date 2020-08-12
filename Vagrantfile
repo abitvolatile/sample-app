@@ -16,6 +16,8 @@ Vagrant.configure("2") do |config|
     # Install/Configure Dependencies for CentOS via Script
     cd /sample-app/
     ./install-centos.sh
+    
+    chown vagrant:vagrant /usr/bin/helm
   
   SHELL
 

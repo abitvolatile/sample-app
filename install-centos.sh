@@ -51,7 +51,6 @@ mv ./skaffold /usr/bin/skaffold
 # Download Helm
 export HELM_INSTALL_DIR='/usr/bin' 
 curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -s -- --version v3.2.4
-chown vagrant:vagrant /usr/bin/helm
 unset HELM_INSTALL_DIR
 
 
