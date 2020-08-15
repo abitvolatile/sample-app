@@ -26,14 +26,14 @@ This project is a sample open-source e-commerce platform by the name of [Spree C
 <br><br><br>
 
 
-# Getting Started
+# Getting Started using Hashicorp Vagrant
 
-#### Note: This project has been tested using Mac OSX 10.14+ or CentOS 7 Operating Systems.
+#### Note: This approach using Vagrant has been tested using Mac OSX 10.14+ or CentOS 7 Operating Systems.
 <br>
 
-## Prerequisites
+## Prerequisites:
 
-**Download and Binaries**
+**Download Binaries**
 * [Download](https://www.virtualbox.org/wiki/Downloads) and install the VirtualBox binary on your local system.
 * [Download](https://www.vagrantup.com/downloads) and install the Vagrant binary on your local system.
 <br><br><br>
@@ -61,7 +61,7 @@ vagrant ssh
 ```
 <br>
 
-#### Step 1: Deploy Kubernetes cluster
+#### Deploy Kubernetes Cluster
 ```
 # Switch to Root User
 sudo -i
@@ -77,7 +77,7 @@ make kube-config
 ```
 <br>
 
-#### Step 2: Deploy Hashicorp Vault (Optional)
+#### Deploy Hashicorp Vault (Optional)
 ```
 # Change Directory to Install Vault
 cd vault/
@@ -88,17 +88,17 @@ cd ..
 ```
 <br>
 
-#### Step 3: Deploy Sample Application
+#### Deploy Sample Application
 ```
 export TAG="latest"
 make dev
 ```
-<br><br><br>
+<br><br>
 
 
-## Steps to Cleanup
+## Steps to Cleanup Vagrant Machine Installation
 
-#### Stop/Shutdown Vagrant Virtual Machine (Optional)
+#### Shutdown Vagrant Virtual Machine (Optional)
 ```
 vagrant halt
 ```
@@ -107,4 +107,89 @@ vagrant halt
 #### Destroy Vagrant Virtual Machine
 ```
 vagrant destroy
+```
+<br><br><br>
+
+
+# Getting Started on Mac OSX 10.14+
+
+#### Note: This approach using Vagrant has been tested using Mac OSX 10.14+ Operating System.
+<br>
+
+## Prerequisites:
+
+**Download Binaries**
+* [Docker Desktop](https://hub.docker.com/editions/community/docker-ce-desktop-mac) and install Docker Desktop on your local system.
+* [KIND](https://github.com/kubernetes-sigs/kind/releases) and install the kind binary on your local system.
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-macos) and install the kubectl binary on your local system.
+* [Helm](https://helm.sh/docs/intro/install/#from-homebrew-macos) and install the helm binary on your local system.
+* [Skaffold](https://skaffold.dev/docs/install/) and install the skaffold binary on your local system.
+* [jq](https://stedolan.github.io/jq/download/) and install the jq binary on your local system.
+<br><br><br>
+
+
+## Provisioning Instructions
+
+#### Clone Project Repository
+```
+git clone https://github.com/abitvolatile/sample-app ./sample-app
+cd sample-app
+```
+<br>
+
+#### Deploy Kubernetes Cluster
+```
+# Switch to Root User
+sudo -i
+
+# Change to Project Directory
+cd /sample-app
+
+# Provisions the Kubernetes Cluster using KIND
+make provision
+
+# Prints the Kubernetes Config (Auth Token)
+make kube-config
+```
+<br>
+
+#### Deploy Hashicorp Vault (Optional)
+```
+# Change Directory to Install Vault
+cd vault/
+
+# Deploy HashiCorp Vault
+./deploy-vault.sh
+cd ..
+```
+<br>
+
+#### Deploy Sample Application
+```
+export TAG="latest"
+make dev
+```
+<br><br>
+
+
+## Steps to Cleanup Docker Installation
+
+#### Delete KIND Cluster Containers
+```
+# Note: This Deletes the KIND Cluster Nodes running as Docker Containers
+make clean-kind
+```
+<br>
+
+#### Purge Docker Container Images (Optional)
+```
+# WARNING: This removes ALL Docker Images, Containers, Volumes and Networks
+make clean-docker
+```
+<br>
+
+#### Remove KIND, Docker and Skaffold Cache and Configs (Only need to use if troubleshooting...!)
+```
+# WARNING: This removes ANY/ALL cache and/or configs for Docker, KIND and Skaffold tools.
+make clean-all
 ```
