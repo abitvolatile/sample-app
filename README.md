@@ -1,18 +1,16 @@
-# sample-app<br> 
+# sample-app<br>
 This project is a sample open-source e-commerce platform by the name of [Spree Commerce](https://spreecommerce.org/).
-The application demonstrates a functional web application in a microservice architecture, which has been make to easily be deployed on a Kubernetes cluster using a few tools, such as Vagrant, Docker, KIND, Helm and Skaffold.
-The web application has also been pre-instrumented with the Datadog APM & RUM libraries for each of the compnents. The application's code has been broken intentionally in such a way to simulate what is a poor user-experience for visitors.
-
+The application demonstrates a functional web application in a microservice architecture, which has been made to be easily deployed on a local Kubernetes cluster using a few open and free tools, such as Vagrant, Docker, KIND, Helm and Skaffold. The web application has also been pre-instrumented with Datadog's APM & RUM libraries for each of the compnents. The application's code has been broken intentionally in such a way to simulate what would appear to be a poor user-experience for visitors due slow load times.
 <br><br>
 
 ## Project Overview 
 
 #### Technology Stack:
 * The FrontEnd component is a [Ruby-on-Rails](https://rubyonrails.org/) Web Server called [Puma](https://github.com/puma/puma), which serves traffic to users.
-* There are two microservices that accompany the application written in Python using the Flask [Framework](https://flask.palletsprojects.com/en/1.1.x/)
+* There are two microservices that accompany the application written in Python using the Flask [Framework](https://flask.palletsprojects.com/en/1.1.x/).
   * The Discounts component serves up discount codes to users on product pages.
-  * The Advertisements component displays banners on the page with weighted values.
-* The Database component is Postgres Database using the [Official Postgres Docker Image](https://hub.docker.com/_/postgres)
+  * The Advertisements component displays banners on page using weighted priorities for frequency.
+* The database component is Postgres DB using the [Official Postgres Docker Image](https://hub.docker.com/_/postgres).
 <br><br><br>
 
 
@@ -63,13 +61,13 @@ vagrant ssh
 
 #### Deploy Kubernetes Cluster, any supporting services and the Sample Web Application
 ```
-# Switch user to Root User
+# Switch to Root User
 sudo -i
 
-# Change Directory to Project Directory
+# Change to Project Directory
 cd /sample-app
 
-# Provisions the Kubernetes Cluster using Kind
+# Provisions the Kubernetes Cluster using KIND
 make provision
 
 # Prints the Kubernetes Config (Auth Token)
@@ -80,7 +78,7 @@ cd vault/
 ./deploy-vault.sh
 cd ..
 
-# Set 
+# Set Variable for Container Tags
 export TAG="latest"
 make dev
 ```
@@ -90,7 +88,7 @@ make dev
 vagrant halt
 ```
 
-#### Cleaning Up Resources
+#### Destroy Vagrant Virtual Machine
 ```
 vagrant destroy
 ```
