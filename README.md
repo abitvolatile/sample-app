@@ -1,12 +1,12 @@
 # sample-app<br>
-This project is a sample open-source e-commerce platform by the name of [Spree Commerce](https://spreecommerce.org/).
-The application demonstrates a functional web application in a microservice architecture, which has been made to be easily deployed on a local Kubernetes cluster using a few open and free tools, such as Vagrant, Docker, KIND, Helm and Skaffold. The web application has also been pre-instrumented with Datadog's APM & RUM libraries for each of the compnents. The application's code has been broken intentionally in such a way to simulate what would appear to be a poor user-experience for visitors due slow load times.
-<br><br>
+This project is a sample open-source e-commerce platform by the name of [Spree Commerce](https://spreecommerce.org/). The application demonstrates a functional web application in a microservice architecture, which has been made to be easily deployed on a local Kubernetes cluster using a few open and free tools, such as Vagrant, Docker, KIND, Helm and Skaffold. The web application has also been pre-instrumented with Datadog's APM & RUM libraries for each of the components. The application's code has been broken intentionally in such a way to simulate what would appear to be a poor user-experience for visitors due slow load times.
+<br><br><br>
 
-## Project Overview 
 
-#### Technology Stack:
-* The FrontEnd component is a [Ruby-on-Rails](https://rubyonrails.org/) Web Server called [Puma](https://github.com/puma/puma), which serves traffic to users.
+# Project Overview
+
+### Technology Stack:
+* The Frontend component is a [Ruby-on-Rails](https://rubyonrails.org/) Web Server called [Puma](https://github.com/puma/puma), which serves traffic to users.
 * There are two microservices that accompany the application written in Python using the Flask [Framework](https://flask.palletsprojects.com/en/1.1.x/).
   * The Discounts component serves up discount codes to users on product pages.
   * The Advertisements component displays banners on page using weighted priorities for frequency.
@@ -14,38 +14,39 @@ The application demonstrates a functional web application in a microservice arch
 <br><br><br>
 
 
-## Technology Overview
-* VirtualBox [Link](https://www.virtualbox.org/)
-* Vagrant [Link](https://www.vagrantup.com/)
-* CentOS [Link](https://www.centos.org/)
-* Docker [Link](https://www.docker.com/)
-* KIND [Link](https://kind.sigs.k8s.io/)
-* Skaffold [Link](https://skaffold.dev/)
-* Helm [Link](https://helm.sh/)
-* Kortena LENS IDE for Kubernetes [Link](https://k8slens.dev/)
+### List of Software & Tools Used:
+* [VirtualBox](https://www.virtualbox.org/)
+* [Vagrant](https://www.vagrantup.com/)
+* [CentOS](https://www.centos.org/)
+* [Docker](https://www.docker.com/)
+* [KIND](https://kind.sigs.k8s.io/)
+* [Skaffold](https://skaffold.dev/)
+* [Helm](https://helm.sh/)
+* [Lens App Kubernetes IDE](https://k8slens.dev/)
 <br><br><br>
 
 
-## Getting Started
+# Getting Started
 
 #### Note: This project has been tested using Mac OSX 10.14+ or CentOS 7 Operating Systems.
 <br>
 
-### Prerequisites
+## Prerequisites
 
 **Download and Binaries**
-* [Download](https://www.virtualbox.org/wiki/Downloads) and install the VirtualBox binary on local system
-* [Download](https://www.vagrantup.com/downloads) and install the Vagrant binary on local system
+* [Download](https://www.virtualbox.org/wiki/Downloads) and install the VirtualBox binary on your local system.
+* [Download](https://www.vagrantup.com/downloads) and install the Vagrant binary on your local system.
 <br><br><br>
 
 
-### Steps to Begin
+## Provisioning Instructions
 
 #### Clone Project Repository
 ```
 git clone https://github.com/abitvolatile/sample-app ./sample-app
 cd sample-app
 ```
+<br>
 
 #### Provision Vagrant (CentOS7) Virtual Machine
 ```
@@ -58,8 +59,9 @@ vagrant up
 # Connects to Virtual Machine via SSH
 vagrant ssh
 ```
+<br>
 
-#### Deploy Kubernetes Cluster, any supporting services and the Sample Web Application
+#### Step 1: Deploy Kubernetes cluster
 ```
 # Switch to Root User
 sudo -i
@@ -72,21 +74,35 @@ make provision
 
 # Prints the Kubernetes Config (Auth Token)
 make kube-config
+```
+<br>
 
-# Deploy HashiCorp Vault Installation Directory (Optional)
+#### Step 2: Deploy Hashicorp Vault (Optional)
+```
+# Change Directory to Install Vault
 cd vault/
+
+# Deploy HashiCorp Vault
 ./deploy-vault.sh
 cd ..
+```
+<br>
 
-# Set Variable for Container Tags
+#### Step 3: Deploy Sample Application
+```
 export TAG="latest"
 make dev
 ```
+<br><br><br>
 
-#### Stop/Shutdown Vagrant Virtual Machine
+
+## Steps to Cleanup
+
+#### Stop/Shutdown Vagrant Virtual Machine (Optional)
 ```
 vagrant halt
 ```
+<br>
 
 #### Destroy Vagrant Virtual Machine
 ```
