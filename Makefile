@@ -20,6 +20,11 @@ all : $(TAG)
 	kind create cluster --config=kind-config.yaml && ./start-skaffold-dev.sh ${TAG}
 
 
+.PHONY : kube-config
+kube-config : 
+	cat ~/.kube/config
+
+
 
 ### Clean Operations
 

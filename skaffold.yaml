@@ -1,5 +1,7 @@
 apiVersion: skaffold/v2beta6
 kind: Config
+metadata:
+  name: sample-app
 build:
   artifacts:
     - image: abitvolatile/advertisements-service
@@ -18,3 +20,8 @@ deploy:
       - database/k8s-manifest/*.yaml
       - discounts-service/k8s-manifest/*.yaml
       - store-frontend/k8s-manifest/*.yaml
+profiles:
+  - name: local-dev
+    activation:
+    - kubeContext: kind
+  - name: stage
