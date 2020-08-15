@@ -26,6 +26,11 @@ This project is a sample open-source e-commerce platform by the name of [Spree C
 <br><br><br>
 
 
+## Deployment Methods
+* [Virtual Machine using Hashicorp Vagrant](#Getting-Started-using-Hashicorp-Vagrant)
+* [Native Mac OSX w/Docker Containers](#Getting-Started-on-Mac-OSX-10.14+)
+<br><br><br>
+
 # Getting Started using Hashicorp Vagrant
 
 #### Note: This approach using Vagrant has been tested using Mac OSX 10.14+ or CentOS 7 Operating Systems.
