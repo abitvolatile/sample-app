@@ -161,7 +161,7 @@ GEM
     crass (1.0.4)
     css_parser (1.7.0)
       addressable
-    ddtrace (0.26.0)
+    ddtrace (0.39.0)
       msgpack
     deface (1.5.1)
       nokogiri (>= 1.6)

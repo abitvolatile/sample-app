@@ -18,6 +18,23 @@ spec:
   strategy: {}
   template:
     metadata:
+      ### Uncomment This Block for Extra-Crispy
+      # annotations:
+      #   vault.hashicorp.com/agent-inject: "true"
+      #   vault.hashicorp.com/log-level: "info"
+      #   vault.hashicorp.com/role: "sample-app_db"
+      #   vault.hashicorp.com/auth-path: "/auth/kubernetes"
+      #   vault.hashicorp.com/agent-revoke-on-shutdown: "true"
+      #   vault.hashicorp.com/agent-inject-secret-docker-entrypoint.sh: "kv/data/sample-app/db/creds"
+      #   vault.hashicorp.com/secret-volume-path-docker-entrypoint.sh: "/etc/profile.d"
+      #   vault.hashicorp.com/agent-inject-command-docker-entrypoint.sh: "chmod a+x /etc/profile.d/docker-entrypoint.sh"
+      #   vault.hashicorp.com/agent-inject-template-docker-entrypoint.sh: |
+      #     {{ with secret "kv/data/sample-app/db/creds" -}}
+      #     #!/bin/sh
+      #     export POSTGRES_PASSWORD="{{ .Data.data.password }}"
+      #     ddtrace-run flask run --port=5002 --host=0.0.0.0
+      #     {{- end }}
+      ### </Comment>
       labels:
         tags.datadoghq.com/env: "dev"
         tags.datadoghq.com/service: "advertisements-service"
@@ -28,9 +45,13 @@ spec:
       containers:
       - image: abitvolatile/advertisements-service:1.0.1
         imagePullPolicy: IfNotPresent
-        name: advertisements 
+        name: advertisements
+        ### Original
         command: ["ddtrace-run"]
         args: ["flask", "run", "--port=5002", "--host=0.0.0.0"]
+        ### Extra-Crispy
+        # command: ["/bin/sh"]
+        # args: ["-c", "/etc/profile.d/docker-entrypoint.sh"]
         env:
           - name: DD_ENV
             valueFrom:
@@ -48,11 +69,13 @@ spec:
             value: "ads.py"
           - name: FLASK_DEBUG
             value: "1"
+          ### Comment This Block for Extra-Crispy
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: pw
                 name: db-password
+          ### </Comment>
           - name: POSTGRES_USER
             value: "user"
           - name: DATADOG_SERVICE_NAME

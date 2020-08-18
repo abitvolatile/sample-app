@@ -3,7 +3,7 @@ This project is a sample open-source e-commerce platform by the name of [Spree C
 <br><br><br>
 
 
-# Project Overview
+## Project Overview
 
 ### Technology Stack:
 * The Frontend component is a [Ruby-on-Rails](https://rubyonrails.org/) Web Server called [Puma](https://github.com/puma/puma), which serves traffic to users.
@@ -22,13 +22,15 @@ This project is a sample open-source e-commerce platform by the name of [Spree C
 * [KIND](https://kind.sigs.k8s.io/)
 * [Skaffold](https://skaffold.dev/)
 * [Helm](https://helm.sh/)
+* [HashiCorp Vault](https://www.vaultproject.io/)
+* [VS Code](https://code.visualstudio.com/)
 * [Lens App Kubernetes IDE](https://k8slens.dev/)
-<br><br><br>
+<br><br><br><br>
 
 
 ## Deployment Methods
-* [Virtual Machine using Hashicorp Vagrant](#Getting-Started-using-Hashicorp-Vagrant)
-* [Native Mac OSX w/Docker Containers](#Getting-Started-on-Mac-OSX-10.14+)
+* [Virtual Machine using Hashicorp Vagrant](#getting-started-using-hashicorp-vagrant)
+* [Native Mac OSX w/Docker Containers](#getting-started-on-mac-osx-1014)
 <br><br><br>
 
 # Getting Started using Hashicorp Vagrant

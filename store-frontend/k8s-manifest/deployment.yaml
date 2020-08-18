@@ -22,6 +22,23 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      ### Uncomment This Block for Extra-Crispy
+      # annotations:
+      #   vault.hashicorp.com/agent-inject: "true"
+      #   vault.hashicorp.com/log-level: "info"
+      #   vault.hashicorp.com/role: "sample-app_db"
+      #   vault.hashicorp.com/auth-path: "/auth/kubernetes"
+      #   vault.hashicorp.com/agent-revoke-on-shutdown: "true"
+      #   vault.hashicorp.com/agent-inject-secret-docker-entrypoint.sh: "kv/data/sample-app/db/creds"
+      #   vault.hashicorp.com/secret-volume-path-docker-entrypoint.sh: "/etc/profile.d"
+      #   vault.hashicorp.com/agent-inject-command-docker-entrypoint.sh: "chmod a+x /etc/profile.d/docker-entrypoint.sh"
+      #   vault.hashicorp.com/agent-inject-template-docker-entrypoint.sh: |
+      #     {{ with secret "kv/data/sample-app/db/creds" -}}
+      #     #!/bin/sh
+      #     export DB_PASSWORD="{{ .Data.data.password }}"
+      #     cd store-frontend && RAILS_ENV=development bundle exec rails s -p 3000 -b '0.0.0.0'
+      #     {{- end }}
+      ### </Comment>
       labels:
         tags.datadoghq.com/env: "dev"
         tags.datadoghq.com/service: "store-frontend"
@@ -30,10 +47,15 @@ spec:
         app: ecommerce
     spec:
       containers:
-      - args:
-        - docker-entrypoint.sh
-        command:
-        - sh
+      - image: abitvolatile/store-frontend:1.0.1
+        imagePullPolicy: IfNotPresent
+        name: ecommerce-spree-observability
+        ### Original
+        args: ["docker-entrypoint.sh"]
+        command: ["sh"]
+        ### Extra-Crispy
+        # command: ["/bin/sh"]
+        # args: ["-c", "/etc/profile.d/docker-entrypoint.sh"]
         env:
         - name: DD_ENV
           valueFrom:
@@ -49,11 +71,13 @@ spec:
               fieldPath: metadata.labels['tags.datadoghq.com/version']
         - name: DB_USERNAME
           value: user
+        ### Comment This Block for Extra-Crispy
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               key: pw
               name: db-password
+        ### </Comment>
         - name: DD_AGENT_HOST
           valueFrom:
             fieldRef:
@@ -62,14 +86,11 @@ spec:
           value: "true"
         - name: DD_ANALYTICS_ENABLED
           value: "true"
-        # Enable RUM
+        ### To Enable Datadog RUM
         - name: DD_CLIENT_TOKEN
           value: "<CLIENT_TOKEN_HERE>"
         - name: DD_APPLICATION_ID
           value: "<APPLICATIION_ID_HERE>"
-        image: abitvolatile/store-frontend:1.0.1
-        imagePullPolicy: IfNotPresent
-        name: ecommerce-spree-observability
         ports:
         - containerPort: 3000
           protocol: TCP

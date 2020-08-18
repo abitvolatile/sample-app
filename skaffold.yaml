@@ -24,4 +24,6 @@ profiles:
   - name: local-dev
     activation:
     - kubeContext: kind
-  - name: stage
+  - name: remote-test
+    activation:
+    - kubeContext: gke-.*

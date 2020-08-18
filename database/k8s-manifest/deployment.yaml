@@ -18,19 +18,23 @@ spec:
   strategy: {}
   template:
     metadata:
+      ### Uncomment This Block for Extra-Crispy
       # annotations:
       #   vault.hashicorp.com/agent-inject: "true"
       #   vault.hashicorp.com/log-level: "info"
       #   vault.hashicorp.com/role: "sample-app_db"
       #   vault.hashicorp.com/auth-path: "/auth/kubernetes"
       #   vault.hashicorp.com/agent-revoke-on-shutdown: "true"
-      #   vault.hashicorp.com/agent-inject-secret-env.sh: "kv/data/sample-app/db/creds"
-      #   vault.hashicorp.com/secret-volume-path-env.sh: "/etc/profile.d"
-      #   vault.hashicorp.com/agent-inject-command-env.sh: "chmod a+x /etc/profile.d/env.sh"
-      #   vault.hashicorp.com/agent-inject-template-env.sh: |
+      #   vault.hashicorp.com/agent-inject-secret-docker-entrypoint.sh: "kv/data/sample-app/db/creds"
+      #   vault.hashicorp.com/secret-volume-path-docker-entrypoint.sh: "/etc/profile.d"
+      #   vault.hashicorp.com/agent-inject-command-docker-entrypoint.sh: "chmod a+x /etc/profile.d/docker-entrypoint.sh"
+      #   vault.hashicorp.com/agent-inject-template-docker-entrypoint.sh: |
       #     {{ with secret "kv/data/sample-app/db/creds" -}}
+      #     #!/bin/bash
       #     export POSTGRES_PASSWORD="{{ .Data.data.password }}"
+      #     /docker-entrypoint.sh postgres
       #     {{- end }}
+      ### </Comment>
       labels:
         tags.datadoghq.com/env: "dev"
         tags.datadoghq.com/service: "store-frontend-sqlite"
@@ -42,6 +46,11 @@ spec:
       - image: postgres:11-alpine
         imagePullPolicy: IfNotPresent
         name: postgres
+        ### Original (NOTE: LEAVE THESE COMMENTED OUT!!!)
+        # command: []
+        # args: []
+        ### Extra-Crispy
+        # command: ["/etc/profile.d/docker-entrypoint.sh"]
         securityContext:
           privileged: true 
         ports:
@@ -59,11 +68,13 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.labels['tags.datadoghq.com/version']
+        ### Comment This Block for Extra-Crispy
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               key: pw
               name: db-password
+        ### </Comment>
         - name: POSTGRES_USER
           value: "user"
         # - name: POSTGRES_HOST_AUTH_METHOD

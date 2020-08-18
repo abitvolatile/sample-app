@@ -37,7 +37,7 @@ kubectl -n $NAMESPACE create serviceaccount vault-auth
 kubectl -n $NAMESPACE create clusterrolebinding role-tokenreview-binding --clusterrole=system:auth-delegator --serviceaccount=vault:vault-auth
 
 # Give it time to spin up pods
-sleep 15
+sleep 60
 
 
 
@@ -137,7 +137,7 @@ kubectl -n $NAMESPACE exec -i vault-0 -c vault -- sh <<EOM
    export VAULT_ADDR="http://127.0.0.1:8200"
    export VAULT_TOKEN=$(echo $VAULT_INIT | jq -r '.root_token')
    vault secrets enable -path=kv kv-v2
-   vault kv put kv/sample-app/db/creds password="password"
+   vault kv put kv/sample-app/db/creds password="R3alLySt0nGPaS5w0rD"
 EOM
 
 echo
