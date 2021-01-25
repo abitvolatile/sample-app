@@ -30,8 +30,9 @@ systemctl start docker.service && systemctl enable docker.service
 
 ### Download/Install Binary Dependencies
 
+yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
 yum install -y epel-release
-yum install -y jq
+yum install -y jq git
 
 # Download Kubectl
 curl -sLo ./kubectl https://storage.googleapis.com/kubernetes-release/release/v1.18.4/bin/linux/amd64/kubectl
