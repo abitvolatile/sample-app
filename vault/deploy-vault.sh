@@ -25,7 +25,7 @@ helm repo update
 
 echo
 echo "Creating Namespace..."
-kubectl create ns $NAMESPACE
+kubectl create ns $NAMESPACE --dry-run=client -o yaml | kubectl apply -f - --overwrite=true
 
 echo
 echo "Deploying Helm Chart..."
@@ -33,8 +33,10 @@ helm -n $NAMESPACE install vault hashicorp/vault --version $HELM_CHART_VERSION -
 
 echo
 echo "Creating Service Account and ClusterRoleBinding Resources..."
-kubectl -n $NAMESPACE create serviceaccount vault-auth
-kubectl -n $NAMESPACE create clusterrolebinding role-tokenreview-binding --clusterrole=system:auth-delegator --serviceaccount=vault:vault-auth
+kubectl -n $NAMESPACE create serviceaccount vault-auth --dry-run=client -o yaml | kubectl apply -f - --overwrite=true
+kubectl -n $NAMESPACE create clusterrolebinding role-tokenreview-binding \
+  --clusterrole=system:auth-delegator --serviceaccount=vault:vault-auth \
+  --dry-run=client -o yaml | kubectl apply -f - --overwrite=true
 
 # Give it time to spin up pods
 sleep 60
@@ -57,6 +59,9 @@ echo "Vault Token and Unseal Keys..."
 # Create Vault Secrets File if it Doesn't Exist
 if [ ! -f ./.vault_secrets ]
 then
+  echo "$VAULT_INIT" | jq '.' > ./.vault_secrets
+else
+  rm -rf ./.vault_secrets
   echo "$VAULT_INIT" | jq '.' > ./.vault_secrets
 fi
 
@@ -182,7 +187,7 @@ kubectl -n $NAMESPACE exec -i vault-0 -c vault -- sh <<EOM
   export VAULT_TOKEN=$(echo $VAULT_INIT | jq -r '.root_token')
   vault write auth/kubernetes/role/sample-app_db \
     bound_service_account_names="*" \
-    bound_service_account_namespaces=default \
+    bound_service_account_namespaces='default, sample-app' \
     policies=sample-app_db \
     ttl=24h
 EOM

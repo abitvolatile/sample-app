@@ -98,6 +98,9 @@ cd ..
 #### Deploy Sample Application
 ```
 export TAG="latest"
+export NAMESPACE="sample-app"
+
+kubectl create ns "${NAMESPACE}"
 make dev
 ```
 <br><br>

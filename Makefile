@@ -7,17 +7,17 @@
 provision :
 	kind create cluster --config=kind-config.yaml
 
-.PHONY : dev $(TAG)
-dev : $(TAG)
-	./start-skaffold-dev.sh ${TAG}
+.PHONY : dev $(TAG) $(NAMESPACE)
+dev : $(TAG) $(NAMESPACE)
+	./start-skaffold-dev.sh
 
-.PHONY : build
-build :
+.PHONY : build $(TAG)
+build : $(TAG)
 	skaffold config set local-cluster false && skaffold build -t ${TAG} && skaffold config set local-cluster true
 
-.PHONY : all $(TAG)
-all : $(TAG)
-	kind create cluster --config=kind-config.yaml && ./start-skaffold-dev.sh ${TAG}
+.PHONY : all $(TAG) $(NAMESPACE)
+all : $(TAG) $(NAMESPACE)
+	kind create cluster --config=kind-config.yaml && ./start-skaffold-dev.sh
 
 
 .PHONY : kube-config
