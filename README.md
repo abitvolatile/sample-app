@@ -9,12 +9,12 @@ This project is a sample open-source e-commerce platform by the name of [Spree C
 * The Frontend component is a [Ruby-on-Rails](https://rubyonrails.org/) Web Server called [Puma](https://github.com/puma/puma), which serves traffic to users.
 * There are two microservices that accompany the application written in Python using the Flask [Framework](https://flask.palletsprojects.com/en/1.1.x/).
   * The Discounts component serves up discount codes to users on product pages.
-  * The Advertisements component displays banners on page using weighted priorities for frequency.
+  * The Advertisements component displays banners on pages using weighted priorities.
 * The database component is Postgres DB using the [Official Postgres Docker Image](https://hub.docker.com/_/postgres).
-<br><br><br>
+<br><br>
 
 
-### List of Software & Tools Used:
+### Software & Tools Used:
 * [VirtualBox](https://www.virtualbox.org/)
 * [Vagrant](https://www.vagrantup.com/)
 * [CentOS](https://www.centos.org/)
@@ -23,19 +23,17 @@ This project is a sample open-source e-commerce platform by the name of [Spree C
 * [Skaffold](https://skaffold.dev/)
 * [Helm](https://helm.sh/)
 * [HashiCorp Vault](https://www.vaultproject.io/)
-* [VS Code](https://code.visualstudio.com/)
-* [Lens App Kubernetes IDE](https://k8slens.dev/)
 <br><br><br><br>
 
 
 ## Deployment Methods
-* [Virtual Machine using Hashicorp Vagrant](#getting-started-using-hashicorp-vagrant)
-* [Native Mac OSX w/Docker Containers](#getting-started-on-mac-osx-1014)
+* [Host Isolation: Provisions a CentOS VM using HashiCorp Vagrant & VirtualBox](#getting-started-with-host-isolation-method-using-hashicorp-vagrant)
+* [Native Mac OSX: Deploys directly on Mac OSX system](#getting-started-with-native-mac-osx)
 <br><br><br>
 
-# Getting Started using Hashicorp Vagrant
+# Getting Started with Host Isolation Method using Hashicorp Vagrant
 
-#### Note: This approach using Vagrant has been tested using Mac OSX 10.14+ or CentOS 7 Operating Systems.
+#### Note: This approach has been tested using Mac OSX 10.14+ with Vagrant and CentOS 7 Operating Systems.
 <br>
 
 ## Prerequisites:
@@ -43,7 +41,19 @@ This project is a sample open-source e-commerce platform by the name of [Spree C
 **Download Binaries**
 * [Download](https://www.virtualbox.org/wiki/Downloads) and install the VirtualBox binary on your local system.
 * [Download](https://www.vagrantup.com/downloads) and install the Vagrant binary on your local system.
-<br><br><br>
+
+<br>
+<b>NOTE: Windows Users</b>
+Folks looking to deploy the project using the HashiCorp Vagrant method on a Windows system, some users have experienced known compatibility issues with later versions (>0.24) of the Vagrant VirtualBox Guest Tools plugin (Ruby GEM Package). To workaround the issue, some have found installing the 0.24 version of the plugin works fine. <br>
+
+<br>
+
+To install the specific version of the compatible plugin, use the following:
+```
+vagrant plugin install vagrant-vbguest --plugin-version 0.24
+```
+
+<br><br>
 
 
 ## Provisioning Instructions
@@ -118,12 +128,12 @@ vagrant halt
 ```
 vagrant destroy
 ```
+
 <br><br><br>
 
+# Getting Started with Native Mac OSX
 
-# Getting Started on Mac OSX 10.14+
-
-#### Note: This approach using Vagrant has been tested using Mac OSX 10.14+ Operating System.
+#### Note: This approach has been tested using Mac OSX 10.14+ Operating System.
 <br>
 
 ## Prerequisites:
@@ -135,7 +145,7 @@ vagrant destroy
 * [Helm](https://helm.sh/docs/intro/install/#from-homebrew-macos) and install the helm binary on your local system.
 * [Skaffold](https://skaffold.dev/docs/install/) and install the skaffold binary on your local system.
 * [jq](https://stedolan.github.io/jq/download/) and install the jq binary on your local system.
-<br><br><br>
+<br><br>
 
 
 ## Provisioning Instructions
@@ -177,6 +187,9 @@ cd ..
 #### Deploy Sample Application
 ```
 export TAG="latest"
+export NAMESPACE="sample-app"
+
+kubectl create ns "${NAMESPACE}"
 make dev
 ```
 <br><br>
