@@ -20,5 +20,6 @@ PS1='$(kube_ps1)'$PS1
 
 
 brew install kubectx
-sudo cp /home/linuxbrew/.linuxbrew/opt/kubectx/bin/kubectx /usr/bin/
+sudo cp /home/linuxbrew/.linuxbrew/bin/kubectx /usr/bin/
+sudo cp /home/linuxbrew/.linuxbrew/bin/kubens /usr/bin
 
