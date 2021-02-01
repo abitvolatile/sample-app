@@ -112,6 +112,8 @@ export NAMESPACE="sample-app"
 
 kubectl create ns "${NAMESPACE}"
 make dev
+
+# Note: Pressing Ctrl+C to exit from dev mode will cleanly rollback the deployed resources.
 ```
 <br><br>
 
@@ -120,12 +122,16 @@ make dev
 
 #### Shutdown Vagrant Virtual Machine (Optional)
 ```
+Note: Be sure to have exited from the SSH session of the CentOS VM.
+
 vagrant halt
 ```
 <br>
 
 #### Destroy Vagrant Virtual Machine
 ```
+Note: Be sure to have exited from the SSH session of the CentOS VM.
+
 vagrant destroy
 ```
 
@@ -139,12 +145,12 @@ vagrant destroy
 ## Prerequisites:
 
 **Download Binaries**
-* [Docker Desktop](https://hub.docker.com/editions/community/docker-ce-desktop-mac) and install Docker Desktop on your local system.
-* [KIND](https://github.com/kubernetes-sigs/kind/releases) and install the kind binary on your local system.
-* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-macos) and install the kubectl binary on your local system.
-* [Helm](https://helm.sh/docs/intro/install/#from-homebrew-macos) and install the helm binary on your local system.
-* [Skaffold](https://skaffold.dev/docs/install/) and install the skaffold binary on your local system.
-* [jq](https://stedolan.github.io/jq/download/) and install the jq binary on your local system.
+* [Download](https://hub.docker.com/editions/community/docker-ce-desktop-mac) and install the Docker Desktop on your local system.
+* [Download](https://github.com/kubernetes-sigs/kind/releases) the KIND binary on your local system.
+* [Download](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-macos) the kubectl binary on your local system.
+* [Download](https://helm.sh/docs/intro/install/#from-homebrew-macos) the Helm binary on your local system.
+* [Download](https://skaffold.dev/docs/install/) the Skaffold binary on your local system.
+* [Download](https://stedolan.github.io/jq/download/) the jq binary on your local system.
 <br><br>
 
 
