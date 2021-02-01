@@ -7,7 +7,7 @@ The `user` database must exist before the account credentials can be created, wh
 <br>
 
 
-## Configure Vault Database Secret Engine (Exec into the Postgres `vault-0` Pod's Shell)
+## Configure Vault Database Secret Engine (Exec into the `vault-0` Pod's Shell)
 ```
 # Set Vault Auth Token Variable
 export VAULT_TOKEN='<VAULT_TOKEN_HERE>'
@@ -80,6 +80,7 @@ vault read postgres/creds/temp-admin-psql-access
 su - postgres
 echo $POSTGRES_PASSWORD
 psql -h localhost -p 5432 -d user -U user -W
+# When prompted, use the string returned from POSTGRES_PASSWORD as the password.
 
 SELECT grantee, string_agg(privilege_type, ', ') AS privileges
 FROM information_schema.role_table_grants 

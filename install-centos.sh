@@ -106,4 +106,8 @@ then
   # Validation/Debugging
   firewall-cmd --reload
   firewall-cmd --list-all
+  
+  echo 'Firewalld Service Stopped!'
+else 
+  echo 'Firewalld Service NOT Running!'
 fi
